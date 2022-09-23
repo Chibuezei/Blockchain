@@ -6,17 +6,22 @@ import java.util.Date;
 
 public class Block {
 
-    private int id;
-    private long timeStamp;
+    private final int id;
+    private final long timeStamp;
+    private int magicNumber;
     private String previousHash;
 
     private String hash;
     private static int lastId;
+    private final long creationDuration;
 
-    public Block() {
+
+    public Block(int lengthOfPrefix) {
+        long startTime = System.nanoTime();
         this.timeStamp = new Date().getTime();
-        this.hash = calculateBlockHash();
+        this.hash = mineBlock(lengthOfPrefix);
         this.id = ++lastId;
+        this.creationDuration = (System.nanoTime() - startTime) / 1000000000;
     }
 
     public String getHash() {
@@ -36,38 +41,23 @@ public class Block {
     }
 
     public String getData() {
-        return id + previousHash + timeStamp;
+        return id + previousHash + timeStamp + magicNumber;
     }
 
-
-    public long getTimeStamp() {
-        return timeStamp;
-    }
-
-
-    public int getId() {
-        return id;
-    }
 
     @Override
     public String toString() {
         return "Block:" + '\n' +
                 "Id: " + id + '\n' +
                 "Timestamp: " + timeStamp + '\n' +
+                "Magic number: " + magicNumber + '\n' +
                 "Hash of the previous block: " + '\n' +
                 previousHash + '\n' +
                 "Hash of the block: " + '\n' +
-                hash + '\n';
+                hash + '\n' +
+                "Block was generating for " + creationDuration + " seconds" + '\n';
     }
 
-    /*
-    Block:
-Id: 1
-Timestamp: 1539810682545
-Hash of the previous block:
-0
-Hash of the block:
-     */
     private String calculateBlockHash() {
         return applySha256(this.toString());
     }
@@ -88,4 +78,16 @@ Hash of the block:
             throw new RuntimeException(e);
         }
     }
+
+    public String mineBlock(int prefix) {
+        if (prefix == 0) return calculateBlockHash();
+        hash = "                                                      ";
+        String prefixString = new String(new char[prefix]).replace('\0', '0');
+        while (!hash.substring(0, prefix).equals(prefixString)) {
+            magicNumber++;
+            hash = calculateBlockHash();
+        }
+        return hash;
+    }
+
 }
