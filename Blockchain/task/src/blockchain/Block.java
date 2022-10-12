@@ -14,26 +14,33 @@ public class Block {
     private String hash;
     private static int lastId;
     private final long creationDuration;
+    private final long miner;
+    private final String prefixState;
 
 
-    public Block(int lengthOfPrefix) {
+    public Block(int lengthOfPrefix, long miner) {
         long startTime = System.nanoTime();
         this.timeStamp = new Date().getTime();
         this.hash = mineBlock(lengthOfPrefix);
         this.id = ++lastId;
         this.creationDuration = (System.nanoTime() - startTime) / 1000000000;
+        this.miner = miner;
+        if (this.creationDuration > 60) {
+            prefixState = "N was decreased by 1";
+        } else if (this.creationDuration < 10) {
+            prefixState = String.format("N was increased to %d", lengthOfPrefix + 1);
+        } else {
+            prefixState = "N stays the same";
+        }
     }
 
     public String getHash() {
         return hash;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
 
-    public String getPreviousHash() {
-        return previousHash;
+    public long getCreationDuration() {
+        return creationDuration;
     }
 
     public void setPreviousHash(String previousHash) {
@@ -48,6 +55,7 @@ public class Block {
     @Override
     public String toString() {
         return "Block:" + '\n' +
+                "Created by miner # " + miner + '\n' +
                 "Id: " + id + '\n' +
                 "Timestamp: " + timeStamp + '\n' +
                 "Magic number: " + magicNumber + '\n' +
@@ -55,11 +63,12 @@ public class Block {
                 previousHash + '\n' +
                 "Hash of the block: " + '\n' +
                 hash + '\n' +
-                "Block was generating for " + creationDuration + " seconds" + '\n';
+                "Block was generating for " + creationDuration + " seconds" + '\n' +
+                prefixState + '\n';
     }
 
     private String calculateBlockHash() {
-        return applySha256(this.toString());
+        return applySha256(this.getData());
     }
 
     public static String applySha256(String input) {
