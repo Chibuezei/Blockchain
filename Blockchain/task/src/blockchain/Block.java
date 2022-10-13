@@ -10,12 +10,15 @@ public class Block {
     private final long timeStamp;
     private int magicNumber;
     private String previousHash;
+    private String data;
 
     private String hash;
     private static int lastId;
     private final long creationDuration;
     private final long miner;
     private final String prefixState;
+
+    private Message message = new Message();
 
 
     public Block(int lengthOfPrefix, long miner) {
@@ -25,6 +28,7 @@ public class Block {
         this.id = ++lastId;
         this.creationDuration = (System.nanoTime() - startTime) / 1000000000;
         this.miner = miner;
+        this.data = message.getMessages(id - 1);
         if (this.creationDuration > 60) {
             prefixState = "N was decreased by 1";
         } else if (this.creationDuration < 10) {
@@ -48,7 +52,7 @@ public class Block {
     }
 
     public String getData() {
-        return id + previousHash + timeStamp + magicNumber;
+        return id + previousHash + timeStamp + magicNumber + data;
     }
 
 
@@ -63,6 +67,8 @@ public class Block {
                 previousHash + '\n' +
                 "Hash of the block: " + '\n' +
                 hash + '\n' +
+                "Block data: " +
+                this.data + '\n' +
                 "Block was generating for " + creationDuration + " seconds" + '\n' +
                 prefixState + '\n';
     }
