@@ -30,7 +30,7 @@ public class BlockChain {
         addBlockToChain(block);
 
         long creationTimeOfLastBlock = block.getCreationDuration();
-        if (creationTimeOfLastBlock > 60) {
+        if (creationTimeOfLastBlock > 100) {
             lengthOfPrefix--;
         } else if (creationTimeOfLastBlock < 10) {
             lengthOfPrefix++;

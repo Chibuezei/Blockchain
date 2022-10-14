@@ -2,6 +2,7 @@ package blockchain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Message {
 
@@ -22,6 +23,11 @@ public class Message {
     }
 
     public String getMessages(int index) {
+        if (index< 5)
         return messages.get(index);
+        else {
+            Random random = new Random();
+            return messages.get(random.nextInt(5));
+        }
     }
 }

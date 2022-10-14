@@ -23,10 +23,11 @@ public class Block {
 
     public Block(int lengthOfPrefix, long miner) {
         long startTime = System.nanoTime();
+//        System.out.println(System.nanoTime());
         this.timeStamp = new Date().getTime();
         this.hash = mineBlock(lengthOfPrefix);
         this.id = ++lastId;
-        this.creationDuration = (System.nanoTime() - startTime) / 1000000000;
+        this.creationDuration = (System.nanoTime() - startTime) / 1000000;//to milliseconds
         this.miner = miner;
         this.data = message.getMessages(id - 1);
         if (this.creationDuration > 60) {
@@ -52,14 +53,15 @@ public class Block {
     }
 
     public String getData() {
-        return id + previousHash + timeStamp + magicNumber + data;
+        return id + previousHash + timeStamp  + data + magicNumber;
     }
 
 
     @Override
     public String toString() {
         return "Block:" + '\n' +
-                "Created by miner # " + miner + '\n' +
+                "Created by miner" + miner + '\n' +
+                "miner" + miner + " gets 100 VC" + '\n' +
                 "Id: " + id + '\n' +
                 "Timestamp: " + timeStamp + '\n' +
                 "Magic number: " + magicNumber + '\n' +

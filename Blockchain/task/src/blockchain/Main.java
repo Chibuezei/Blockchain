@@ -15,7 +15,7 @@ public class Main {
         BlockChain blockChain = new BlockChain();
         ExecutorService executorMiner = Executors.newFixedThreadPool(processors);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 15; i++) {
             executorMiner.submit(() -> {
                 try {
                     long threadId = Thread.currentThread().getId();
